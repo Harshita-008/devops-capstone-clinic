@@ -1,0 +1,23 @@
+# Build stage: Node compiles the React app into static files in /app/dist.
+FROM node:22-alpine AS build
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY . .
+RUN npm run build
+
+
+# Runtime stage: nginx serves the static files; Node and the source code are not included.
+FROM nginxinc/nginx-unprivileged:1.30-alpine
+
+ENV BACKEND_URL=http://backend:8000
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# UID 101 is the unprivileged nginx user from the base image; it listens on 8080 instead of 80.
+USER 101
+EXPOSE 8080
+
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1
