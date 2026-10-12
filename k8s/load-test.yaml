@@ -1,0 +1,33 @@
+# Generates CPU load on the backend for 3 minutes so the HPA scales it out.
+# kubectl apply -f k8s/load-test.yaml   then   kubectl get hpa -n clinicflow -w
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clinicflow-load-test
+  namespace: clinicflow
+spec:
+  # Four workers in parallel, each sending requests back to back.
+  parallelism: 4
+  completions: 4
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      containers:
+        - name: load
+          image: busybox:1.37
+          command:
+            - sh
+            - -c
+            - |
+              end=$(( $(date +%s) + 180 ))
+              while [ "$(date +%s)" -lt "$end" ]; do
+                wget -q -O /dev/null http://clinicflow-backend:8000/api/appointments
+              done
+          resources:
+            requests: { cpu: 50m, memory: 16Mi }
+            limits: { cpu: 200m, memory: 32Mi }
