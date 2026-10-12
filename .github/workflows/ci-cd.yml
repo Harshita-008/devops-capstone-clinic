@@ -96,6 +96,8 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}
           labels: |
+            org.opencontainers.image.title=clinicflow-${{ matrix.service }}
+            org.opencontainers.image.description=ClinicFlow clinic appointment management ${{ matrix.service }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha,scope=${{ matrix.service }}
