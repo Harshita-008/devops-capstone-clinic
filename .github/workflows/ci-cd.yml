@@ -126,3 +126,32 @@ jobs:
         run: |
           docker push "$IMAGE"
           echo "Pushed \`$IMAGE\`" >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    name: Deploy via GitOps
+    # Argo CD watches helm/clinicflow on main, so committing the new image tag there is the deployment.
+    needs: images
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Point the Helm chart at the new images
+        run: |
+          sed -i -E "s/^(  tag: )\".*\"$/\1\"${GITHUB_SHA}\"/" helm/clinicflow/values.yaml
+          grep -q "  tag: \"${GITHUB_SHA}\"" helm/clinicflow/values.yaml
+
+      # Commits made with GITHUB_TOKEN do not start another workflow run, so this cannot loop.
+      - name: Commit the new tag
+        run: |
+          if git diff --quiet; then
+            echo "values.yaml already points at ${GITHUB_SHA}"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Deploy ${GITHUB_SHA::7} to the cluster"
+          git push origin HEAD:main
+          echo "Argo CD will roll out \`${GITHUB_SHA::7}\` within a minute" >> "$GITHUB_STEP_SUMMARY"
