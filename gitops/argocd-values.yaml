@@ -1,0 +1,23 @@
+# Argo CD for the local kind cluster.
+# helm install argocd argo/argo-cd --version 10.10.2 -n argocd --create-namespace -f gitops/argocd-values.yaml
+global:
+  domain: argocd.localhost
+
+configs:
+  params:
+    # Plain HTTP behind the local Traefik Ingress; a real cluster would terminate TLS at the Ingress.
+    server.insecure: true
+  cm:
+    # Check Git for new commits every minute instead of the default three, so demos roll out quickly.
+    timeout.reconciliation: 60s
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+
+# Single sign-on and notifications are not used in this project.
+dex:
+  enabled: false
+notifications:
+  enabled: false

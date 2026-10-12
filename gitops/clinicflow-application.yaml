@@ -1,0 +1,23 @@
+# Argo CD keeps the cluster in sync with helm/clinicflow on the main branch.
+# The CI pipeline writes each new image tag into values.yaml, and Argo CD rolls it out.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: clinicflow
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Harshita-008/devops-capstone-clinic.git
+    targetRevision: main
+    path: helm/clinicflow
+    helm:
+      releaseName: clinicflow
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: clinicflow
+  syncPolicy:
+    automated:
+      # Delete resources removed from Git, and undo manual changes made with kubectl.
+      prune: true
+      selfHeal: true
