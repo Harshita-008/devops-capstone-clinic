@@ -1,0 +1,16 @@
+# Only app code, migrations and the runtime requirements belong in the image.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.db
+.env
+tests/
+pytest.ini
+pyproject.toml
+requirements-dev.txt
+Dockerfile
+.dockerignore
