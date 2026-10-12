@@ -1,5 +1,5 @@
 # Argo CD keeps the cluster in sync with helm/clinicflow on the main branch.
-# The CI pipeline writes each new image tag into values.yaml, and Argo CD rolls it out.
+# Updating image.tag in values.yaml and pushing is all it takes to deploy a new version.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

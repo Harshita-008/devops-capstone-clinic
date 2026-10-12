@@ -1,10 +1,13 @@
 name: CI/CD
 
+# Changes that need no new image (deploy tag, docs, screenshots) do not start a run.
 on:
   push:
     branches: [main]
+    paths-ignore: [helm/clinicflow/values.yaml, README.md, "screenshots/**"]
   pull_request:
     branches: [main]
+    paths-ignore: [helm/clinicflow/values.yaml, README.md, "screenshots/**"]
   workflow_dispatch:
 
 # A newer push to the same branch cancels the run that is still in progress.
@@ -126,32 +129,4 @@ jobs:
         run: |
           docker push "$IMAGE"
           echo "Pushed \`$IMAGE\`" >> "$GITHUB_STEP_SUMMARY"
-
-  deploy:
-    name: Deploy via GitOps
-    # Argo CD deploys whatever image tag is committed in helm/clinicflow/values.yaml.
-    needs: images
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Point the Helm chart at the new images
-        run: |
-          sed -i -E "s/^(  tag: )\".*\"$/\1\"${GITHUB_SHA}\"/" helm/clinicflow/values.yaml
-          grep -q "  tag: \"${GITHUB_SHA}\"" helm/clinicflow/values.yaml
-
-      # Commits pushed with GITHUB_TOKEN do not start a new run, so this cannot loop.
-      - name: Commit the new tag
-        run: |
-          if git diff --quiet; then
-            echo "values.yaml already points at ${GITHUB_SHA}"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "Deploy ${GITHUB_SHA::7} to the cluster"
-          git push origin HEAD:main
-          echo "Argo CD will roll out \`${GITHUB_SHA::7}\` within a minute" >> "$GITHUB_STEP_SUMMARY"
+          echo "To deploy, set \`image.tag\` in helm/clinicflow/values.yaml to \`${GITHUB_SHA}\`" >> "$GITHUB_STEP_SUMMARY"
