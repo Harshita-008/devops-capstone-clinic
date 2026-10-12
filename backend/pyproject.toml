@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, import order, bugbear and modern-syntax checks
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+# The local alembic/ migrations folder would otherwise be mistaken for first-party code.
+known-third-party = ["alembic"]
