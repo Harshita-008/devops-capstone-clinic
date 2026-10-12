@@ -6,7 +6,8 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt \
+    && pip uninstall -y pip
 
 
 # Runtime stage: only the virtualenv and the application code, running as a non-root user.
@@ -16,7 +17,10 @@ ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-RUN groupadd --system --gid 10001 clinic \
+# pip is not needed at runtime and bundles its own libraries that vulnerability scanners flag.
+RUN python -m pip uninstall -y pip \
+    && rm -rf /usr/local/lib/python3.13/ensurepip \
+    && groupadd --system --gid 10001 clinic \
     && useradd --system --uid 10001 --gid clinic --no-create-home clinic
 
 WORKDIR /app
