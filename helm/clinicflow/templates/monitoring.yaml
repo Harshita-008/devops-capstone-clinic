@@ -1,0 +1,32 @@
+{{- /* Only rendered when the Prometheus Operator CRDs exist, so the chart still installs on a bare cluster. */ -}}
+{{- if and .Values.monitoring.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1/ServiceMonitor") }}
+{{- $fullname := include "clinicflow.fullname" . -}}
+# Tells Prometheus to scrape the backend's /metrics endpoint through its Service.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $fullname }}-backend
+  labels:
+    {{- include "clinicflow.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  selector:
+    matchLabels:
+      {{- include "clinicflow.selectorLabels" (dict "ctx" . "component" "backend") | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: {{ .Values.monitoring.scrapeInterval }}
+---
+# Grafana's sidecar loads any ConfigMap with this label as a dashboard.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}-dashboard
+  labels:
+    {{- include "clinicflow.labels" . | nindent 4 }}
+    grafana_dashboard: "1"
+data:
+  clinicflow.json: |-
+    {{- .Files.Get "dashboards/clinicflow.json" | nindent 4 }}
+{{- end }}

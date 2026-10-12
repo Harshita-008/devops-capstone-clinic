@@ -1,7 +1,7 @@
 # Images are built and pushed by the CI pipeline. Both share one tag: the Git commit SHA.
 image:
   registry: ghcr.io/harshita-008
-  tag: "a45ab3c5fc40e668ca9afa48c3b5aab58473831c"
+  tag: "eac98ea6a2423d46f075081eb71d9181c2edfcf7"
   pullPolicy: IfNotPresent
 
 backend:
@@ -32,6 +32,11 @@ postgres:
   resources:
     requests: { cpu: 100m, memory: 128Mi }
     limits: { cpu: 500m, memory: 512Mi }
+
+monitoring:
+  # ServiceMonitor and Grafana dashboard; skipped automatically when Prometheus Operator is not installed.
+  enabled: true
+  scrapeInterval: 15s
 
 ingress:
   enabled: true
