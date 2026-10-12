@@ -25,7 +25,9 @@ Developer
 GitHub Actions
    |  ruff + pytest, ESLint + frontend build
    |  docker build, Trivy scan, push to GHCR (tag = commit SHA)
-   |  commit the new image tag to helm/clinicflow/values.yaml
+   v
+Developer sets the new tag in helm/clinicflow/values.yaml and pushes
+   |
    v
 Argo CD (inside the cluster, watches main)
    |
@@ -122,13 +124,13 @@ The workflow in `.github/workflows/ci-cd.yml` runs on every push and pull reques
 2. **Frontend lint and build:** ESLint and `vite build`
 3. **Build, scan and push:** builds the backend and frontend images, scans them with Trivy and pushes
    them to GHCR. This only runs if steps 1 and 2 pass, so a failing test stops the pipeline.
-4. **Deploy via GitOps:** writes the new image tag into `helm/clinicflow/values.yaml` and commits it.
-   Argo CD sees this commit and deploys it.
 
 Images are tagged with the commit SHA only, for example
 `ghcr.io/harshita-008/clinicflow-backend:4b0657b18e17c99a2f1a2138b5aec570898119c3`, so every running
-pod can be traced back to one commit. Pull requests build and scan the images but do not push or
-deploy them.
+pod can be traced back to one commit. Pull requests build and scan the images but do not push them.
+
+A push that only changes the image tag in `values.yaml`, the README or screenshots does not start the
+pipeline, because no new image is needed.
 
 A green run of the full pipeline:
 https://github.com/Harshita-008/devops-capstone-clinic/actions/runs/38243699393
@@ -204,9 +206,16 @@ helm install argocd argo/argo-cd --version 10.10.2 -n argocd --create-namespace 
 kubectl apply -f gitops/clinicflow-application.yaml
 ```
 
-Auto sync is on, with `prune` and `selfHeal`, so the cluster always matches Git. A commit reaches
-the cluster about 3 to 4 minutes after `git push`, and every deployment can be rolled back from the
-Argo CD history.
+Auto sync is on, with `prune` and `selfHeal`, so the cluster always matches Git.
+
+To release a new version:
+
+1. push the code change and wait for the pipeline to go green
+2. copy the commit SHA from the pipeline summary into `image.tag` in `helm/clinicflow/values.yaml`
+3. commit and push
+
+Argo CD checks Git every minute, picks up the new tag and replaces the pods one by one. Every
+deployment is listed in the Argo CD history and can be rolled back from there.
 
 ## Autoscaling
 
@@ -336,11 +345,11 @@ Argo CD in sync with Git:
 ![Argo CD](screenshots/img_27.png)
 
 I changed the text under the logo and pushed. The pipeline tested, built, scanned and pushed the
-images, then committed the new tag:
+images:
 
-![Pipeline with deploy job](screenshots/img_28.png)
+![Pipeline run for the change](screenshots/img_28.png)
 
-Argo CD deployed it automatically:
+I then set the new tag in `values.yaml` and pushed, and Argo CD deployed it:
 
 ![Argo CD history](screenshots/img_29.png)
 
