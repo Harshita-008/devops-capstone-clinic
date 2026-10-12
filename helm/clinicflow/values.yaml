@@ -9,7 +9,7 @@ backend:
   resources:
     requests: { cpu: 100m, memory: 128Mi }
     limits: { cpu: 500m, memory: 256Mi }
-  # When enabled the HPA owns the replica count, so `replicas` above is only used without it.
+  # With autoscaling on, the HPA sets the replica count instead of `replicas`.
   autoscaling:
     enabled: true
     minReplicas: 2
@@ -26,7 +26,7 @@ postgres:
   image: postgres:17-alpine
   database: clinic
   username: clinic
-  # Demo value for the local cluster. A real deployment would inject this from a secret manager.
+  # Local demo password only; a real deployment would use a secret manager.
   password: clinic-local-password
   storage: 1Gi
   resources:
@@ -34,12 +34,12 @@ postgres:
     limits: { cpu: 500m, memory: 512Mi }
 
 monitoring:
-  # ServiceMonitor and Grafana dashboard; skipped automatically when Prometheus Operator is not installed.
+  # ServiceMonitor and Grafana dashboard, added only if Prometheus Operator is installed.
   enabled: true
   scrapeInterval: 15s
 
 ingress:
   enabled: true
   className: traefik
-  # *.localhost resolves to 127.0.0.1 in browsers and curl, so no hosts file edit is needed.
+  # *.localhost always points to this machine, so no hosts file change is needed.
   host: clinicflow.localhost

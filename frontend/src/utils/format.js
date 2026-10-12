@@ -1,12 +1,12 @@
 const dateFormat = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 const timeFormat = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit' })
 
-// The API returns clinic local times without a timezone, which the browser parses as local time.
+// API times have no timezone, so the browser reads them as local time.
 export const formatDate = (value) => (value ? dateFormat.format(new Date(value)) : '-')
 export const formatTime = (value) => timeFormat.format(new Date(value))
 export const formatDateTime = (value) => `${formatDate(value)}, ${formatTime(value)}`
 
-/** YYYY-MM-DD for today in the browser's timezone, the format date inputs and the API expect. */
+/** Today as YYYY-MM-DD in the browser's timezone. */
 export function todayIso() {
   const now = new Date()
   return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10)

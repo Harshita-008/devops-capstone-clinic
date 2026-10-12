@@ -8,5 +8,5 @@ select = ["E", "F", "W", "I", "B", "UP"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
-# The local alembic/ migrations folder would otherwise be mistaken for first-party code.
+# Stops ruff treating the local alembic/ folder as project code.
 known-third-party = ["alembic"]

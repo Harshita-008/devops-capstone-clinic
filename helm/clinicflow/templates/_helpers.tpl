@@ -17,14 +17,14 @@ app.kubernetes.io/version: {{ .Values.image.tag | trunc 7 | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
-{{/* Stable labels a Service uses to find the pods of one component. Call with (dict "ctx" $ "component" "backend"). */}}
+{{/* Labels a Service uses to select the pods of one component. */}}
 {{- define "clinicflow.selectorLabels" -}}
 app.kubernetes.io/name: {{ .ctx.Chart.Name }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
 app.kubernetes.io/component: {{ .component }}
 {{- end -}}
 
-{{/* Full image reference for an application component, e.g. ghcr.io/owner/clinicflow-backend:<sha>. */}}
+{{/* Image reference, e.g. ghcr.io/harshita-008/clinicflow-backend:<sha>. */}}
 {{- define "clinicflow.image" -}}
 {{ .ctx.Values.image.registry }}/clinicflow-{{ .component }}:{{ .ctx.Values.image.tag }}
 {{- end -}}

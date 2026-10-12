@@ -12,7 +12,7 @@ from app.main import app
 from app.models import Doctor, Patient
 from tests.helpers import slot
 
-# In-memory SQLite shared through one connection; the real PostgreSQL database is never used by tests.
+# Tests use an in-memory SQLite database, never the real PostgreSQL.
 engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
 TestingSession = sessionmaker(bind=engine, autoflush=False)
 

@@ -2,7 +2,7 @@
 provider "aws" {
   region = var.aws_region
 
-  # Every resource gets these tags, which makes the lab easy to find in the console and in billing.
+  # Tag everything so the lab is easy to find in the console and in billing.
   default_tags {
     tags = {
       Project     = var.project_name

@@ -15,7 +15,7 @@ ENV BACKEND_URL=http://backend:8000
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# UID 101 is the unprivileged nginx user from the base image; it listens on 8080 instead of 80.
+# Runs as the unprivileged nginx user (UID 101) on port 8080.
 USER 101
 EXPOSE 8080
 

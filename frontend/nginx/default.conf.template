@@ -1,4 +1,4 @@
-# Rendered at container start by the nginx image: ${BACKEND_URL} is replaced from the environment.
+# ${BACKEND_URL} is filled in from the environment when the container starts.
 server {
     listen 8080;
     server_name _;
@@ -13,7 +13,7 @@ server {
     gzip on;
     gzip_types text/css application/javascript application/json image/svg+xml;
 
-    # The browser only calls /api; nginx forwards it so the backend address never reaches the client.
+    # The browser only calls /api; nginx passes it on to the backend.
     location /api/ {
         proxy_pass ${BACKEND_URL};
         proxy_http_version 1.1;
@@ -35,7 +35,7 @@ server {
         expires 1y;
     }
 
-    # Single page app: unknown paths serve index.html, which is never cached so new releases load.
+    # Single page app: unknown paths serve index.html, which is never cached.
     location / {
         expires -1;
         try_files $uri /index.html;

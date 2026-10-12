@@ -1,4 +1,4 @@
-// The browser only ever calls /api; nginx (containers) or the Vite proxy (dev) forwards it to the backend.
+// The browser always calls /api; nginx or the Vite dev proxy forwards it to the backend.
 const API_BASE = '/api'
 
 export class ApiError extends Error {

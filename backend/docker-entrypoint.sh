@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-# Compose migrates on startup. Kubernetes runs migrations in an init container instead and
-# sets RUN_MIGRATIONS=false here, so the API container only serves traffic.
+# Kubernetes sets RUN_MIGRATIONS=false because an init container runs the migrations there.
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     alembic upgrade head
 fi

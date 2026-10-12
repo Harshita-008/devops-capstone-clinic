@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar'
 import ToastProvider from './components/ToastProvider'
 import { PAGES } from './pages/registry'
 
-// The page lives in the URL hash (#patients) so refresh and the back button keep the current page.
+// The current page is kept in the URL hash so refresh and the back button work.
 const pageFromHash = () => PAGES.find((page) => `#${page.id}` === window.location.hash)?.id ?? PAGES[0].id
 
 export default function App() {

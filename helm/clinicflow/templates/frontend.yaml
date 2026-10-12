@@ -45,7 +45,7 @@ spec:
             - name: http
               containerPort: 8080
           env:
-            # nginx inside the image forwards /api here; the Ingress also routes /api straight to the backend.
+            # nginx in the image proxies /api to this address.
             - name: BACKEND_URL
               value: http://{{ $fullname }}-backend:8000
           readinessProbe:

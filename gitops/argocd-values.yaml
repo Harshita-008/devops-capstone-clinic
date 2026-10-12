@@ -5,10 +5,10 @@ global:
 
 configs:
   params:
-    # Plain HTTP behind the local Traefik Ingress; a real cluster would terminate TLS at the Ingress.
+    # Plain HTTP is fine for the local cluster.
     server.insecure: true
   cm:
-    # Check Git for new commits every minute instead of the default three, so demos roll out quickly.
+    # Check Git every minute (default is 3) so new commits roll out faster.
     timeout.reconciliation: 60s
 
 server:

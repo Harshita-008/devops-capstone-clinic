@@ -83,7 +83,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # Registry paths must be lowercase, and the tag is the commit SHA so every image maps to one commit.
+      # Registry paths must be lowercase. The tag is the commit SHA.
       - name: Set image name
         run: echo "IMAGE=${REGISTRY}/${GITHUB_REPOSITORY_OWNER,,}/clinicflow-${{ matrix.service }}:${GITHUB_SHA}" >> "$GITHUB_ENV"
 
@@ -129,7 +129,7 @@ jobs:
 
   deploy:
     name: Deploy via GitOps
-    # Argo CD watches helm/clinicflow on main, so committing the new image tag there is the deployment.
+    # Argo CD deploys whatever image tag is committed in helm/clinicflow/values.yaml.
     needs: images
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -143,7 +143,7 @@ jobs:
           sed -i -E "s/^(  tag: )\".*\"$/\1\"${GITHUB_SHA}\"/" helm/clinicflow/values.yaml
           grep -q "  tag: \"${GITHUB_SHA}\"" helm/clinicflow/values.yaml
 
-      # Commits made with GITHUB_TOKEN do not start another workflow run, so this cannot loop.
+      # Commits pushed with GITHUB_TOKEN do not start a new run, so this cannot loop.
       - name: Commit the new tag
         run: |
           if git diff --quiet; then

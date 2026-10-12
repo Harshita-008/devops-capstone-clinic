@@ -7,7 +7,7 @@ from app import models  # noqa: F401  registers the tables on Base.metadata
 from app.config import settings
 from app.db import Base
 
-# Arbitrary constant shared by every replica; whoever holds the lock migrates, the others wait.
+# Any fixed number works, as long as every replica uses the same one.
 MIGRATION_LOCK_ID = 7243001
 
 config = context.config
@@ -32,8 +32,7 @@ def run_migrations_online():
         poolclass=pool.NullPool,
     )
     with connectable.connect() as connection:
-        # Kubernetes starts several backend pods at once. A session-level advisory lock makes them
-        # migrate one at a time; the lock is released when this connection closes.
+        # Pods that start together take turns; the lock is released when this connection closes.
         if connection.dialect.name == "postgresql":
             connection.execute(text("SELECT pg_advisory_lock(:id)"), {"id": MIGRATION_LOCK_ID})
             connection.commit()

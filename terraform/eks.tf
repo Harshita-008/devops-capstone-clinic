@@ -8,12 +8,11 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  # Public API endpoint so kubectl works from a laptop; the identity running Terraform becomes cluster admin.
+  # Public endpoint so kubectl works from a laptop; the Terraform user becomes admin.
   endpoint_public_access                   = true
   enable_cluster_creator_admin_permissions = true
 
-  # Short-lived lab cluster: skip the customer managed KMS key and control plane log group, which would
-  # otherwise keep billing (KMS) or linger after destroy.
+  # Lab cluster: no KMS key or log group, so nothing keeps billing after destroy.
   create_kms_key              = false
   encryption_config           = null
   create_cloudwatch_log_group = false

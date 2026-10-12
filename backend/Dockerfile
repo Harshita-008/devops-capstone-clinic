@@ -17,7 +17,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# pip is not needed at runtime and bundles its own libraries that vulnerability scanners flag.
+# pip is not needed at runtime and only adds vulnerability scanner findings.
 RUN python -m pip uninstall -y pip \
     && rm -rf /usr/local/lib/python3.13/ensurepip \
     && groupadd --system --gid 10001 clinic \

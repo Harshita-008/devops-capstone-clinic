@@ -12,7 +12,7 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          # The longest matching prefix wins, so /api goes to the API and everything else to the UI.
+          # Longest prefix wins: /api to the backend, everything else to the frontend.
           - path: /api
             pathType: Prefix
             backend:

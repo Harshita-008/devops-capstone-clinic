@@ -20,7 +20,7 @@ register_error_handlers(app)
 for module in (system, patients, doctors, appointments, dashboard):
     app.include_router(module.router)
 
-# Request count, latency and in-progress metrics for Prometheus. Probe endpoints are left out as noise.
+# HTTP request metrics for Prometheus; health probes are left out.
 Instrumentator(excluded_handlers=["/metrics", "/health", "/ready"]).instrument(app).expose(
     app, endpoint="/metrics", include_in_schema=False
 )

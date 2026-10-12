@@ -15,7 +15,6 @@ APPOINTMENT_STATUS_CHANGES = Counter(
     ["status"],
 )
 
-# Create every labelled series at 0 on startup. Otherwise a series first appears already at 1,
-# and Prometheus increase() and rate() miss that first change.
+# Start every status series at 0 so Prometheus also counts the first change.
 for status in get_args(AppointmentStatus):
     APPOINTMENT_STATUS_CHANGES.labels(status=status)

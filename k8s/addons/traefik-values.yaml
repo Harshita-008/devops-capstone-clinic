@@ -1,5 +1,4 @@
-# Ingress controller. ingress-nginx was archived in March 2026, so Traefik implements the
-# standard Kubernetes Ingress resources instead.
+# Ingress controller (ingress-nginx was archived in March 2026).
 # helm install traefik traefik/traefik --version 41.7.1 -n traefik --create-namespace -f k8s/addons/traefik-values.yaml
 service:
   spec:
@@ -17,8 +16,8 @@ ingressClass:
   isDefaultClass: true
   name: traefik
 
-# A NodePort Service has no load balancer IP to publish, which would leave every Ingress without an
-# address (and Argo CD reporting it as Progressing). On kind the entry point is the laptop itself.
+# NodePort has no load balancer IP, so publish 127.0.0.1 as the Ingress address.
+# Without it Argo CD keeps the Ingress at Progressing.
 providers:
   kubernetesIngress:
     publishedService:

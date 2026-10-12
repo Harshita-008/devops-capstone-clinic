@@ -14,7 +14,7 @@ def clinic_now() -> datetime:
 
 
 def to_clinic_time(value: datetime) -> datetime:
-    """Accept naive local times from the UI or aware times from API clients; store clinic local time."""
+    """Convert a time from the API to clinic local time without tzinfo."""
     if value.tzinfo is None:
         return value
     return value.astimezone(ZoneInfo(settings.clinic_timezone)).replace(tzinfo=None)

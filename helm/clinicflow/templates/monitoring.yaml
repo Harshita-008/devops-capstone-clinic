@@ -1,4 +1,4 @@
-{{- /* Only rendered when the Prometheus Operator CRDs exist, so the chart still installs on a bare cluster. */ -}}
+{{- /* Only when Prometheus Operator is installed, so the chart also works without it. */ -}}
 {{- if and .Values.monitoring.enabled (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1/ServiceMonitor") }}
 {{- $fullname := include "clinicflow.fullname" . -}}
 # Tells Prometheus to scrape the backend's /metrics endpoint through its Service.

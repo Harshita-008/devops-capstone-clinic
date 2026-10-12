@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // During `npm run dev` the API runs separately on port 8000; nginx does this routing in containers.
+    // In dev the API runs on port 8000; in containers nginx does this instead.
     proxy: { '/api': 'http://localhost:8000' },
   },
 })

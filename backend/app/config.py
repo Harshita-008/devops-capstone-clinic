@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     app_name: str = "ClinicFlow API"
     app_version: str = "1.0.0"
     database_url: str = "postgresql+psycopg://clinic:clinic@localhost:5432/clinic"
-    # Length of one appointment slot. Two bookings for the same doctor inside this window clash.
+    # Two bookings for the same doctor clash if they start within this many minutes.
     slot_minutes: int = 30
     clinic_timezone: str = "Asia/Kolkata"
 

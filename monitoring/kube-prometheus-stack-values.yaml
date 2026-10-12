@@ -17,7 +17,7 @@ prometheus:
     paths: [/]
 
 grafana:
-  # Local demo credentials; a shared environment would use an existing secret instead.
+  # Local demo password only.
   adminPassword: clinicflow-admin
   ingress:
     enabled: true
@@ -26,7 +26,7 @@ grafana:
     path: /
   sidecar:
     dashboards:
-      # Load dashboards shipped as labelled ConfigMaps by application charts in any namespace.
+      # Load dashboard ConfigMaps from every namespace.
       searchNamespace: ALL
     datasources:
       alertmanager:
@@ -36,8 +36,7 @@ grafana:
 alertmanager:
   enabled: false
 
-# kind runs these control plane components bound to localhost, so Prometheus cannot reach them
-# and they would only show as permanently DOWN targets.
+# kind binds these to localhost, so they would always show as DOWN.
 kubeEtcd:
   enabled: false
 kubeControllerManager:

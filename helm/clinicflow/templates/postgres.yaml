@@ -16,7 +16,7 @@ spec:
       port: 5432
       targetPort: postgres
 ---
-# A StatefulSet keeps a stable identity and its own PersistentVolumeClaim, so data survives pod restarts.
+# StatefulSet with its own volume, so the data survives pod restarts.
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -49,7 +49,7 @@ spec:
             - secretRef:
                 name: {{ $fullname }}-db
           env:
-            # A subdirectory, because the volume root contains lost+found on some storage classes.
+            # Subdirectory, since the volume root can contain lost+found.
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           readinessProbe:
