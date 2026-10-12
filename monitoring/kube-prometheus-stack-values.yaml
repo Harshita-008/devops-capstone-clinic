@@ -1,0 +1,48 @@
+# Prometheus + Grafana for the local kind cluster.
+# helm install monitoring prometheus-community/kube-prometheus-stack --version 92.3.0 \
+#   -n monitoring --create-namespace -f monitoring/kube-prometheus-stack-values.yaml
+
+prometheus:
+  prometheusSpec:
+    # Pick up ServiceMonitors from every namespace and release, not only this chart's own.
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    retention: 2d
+    resources:
+      requests: { cpu: 100m, memory: 512Mi }
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts: [prometheus.localhost]
+    paths: [/]
+
+grafana:
+  # Local demo credentials; a shared environment would use an existing secret instead.
+  adminPassword: clinicflow-admin
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts: [grafana.localhost]
+    path: /
+  sidecar:
+    dashboards:
+      # Load dashboards shipped as labelled ConfigMaps by application charts in any namespace.
+      searchNamespace: ALL
+    datasources:
+      alertmanager:
+        enabled: false
+
+# Alerting is out of scope for this project, so Alertmanager is left out to save resources.
+alertmanager:
+  enabled: false
+
+# kind runs these control plane components bound to localhost, so Prometheus cannot reach them
+# and they would only show as permanently DOWN targets.
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false
