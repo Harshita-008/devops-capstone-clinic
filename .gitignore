@@ -23,7 +23,7 @@ dist/
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
-.terraform.lock.hcl.bak
+*.tfplan
 crash.log
 
 # Kubernetes
