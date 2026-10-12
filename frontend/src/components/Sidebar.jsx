@@ -7,7 +7,7 @@ export default function Sidebar({ pages, current, onNavigate }) {
         <img src="/favicon.svg" alt="" className="brand-logo" />
         <div>
           <strong>ClinicFlow</strong>
-          <small>Front desk</small>
+          <small>Reception · Mumbai</small>
         </div>
       </div>
       <nav className="nav">
