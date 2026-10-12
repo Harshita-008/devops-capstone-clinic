@@ -1,0 +1,40 @@
+# Images are built and pushed by the CI pipeline. Both share one tag: the Git commit SHA.
+image:
+  registry: ghcr.io/harshita-008
+  tag: "a45ab3c5fc40e668ca9afa48c3b5aab58473831c"
+  pullPolicy: IfNotPresent
+
+backend:
+  replicas: 2
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 256Mi }
+  # When enabled the HPA owns the replica count, so `replicas` above is only used without it.
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 60
+
+frontend:
+  replicas: 2
+  resources:
+    requests: { cpu: 25m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 64Mi }
+
+postgres:
+  image: postgres:17-alpine
+  database: clinic
+  username: clinic
+  # Demo value for the local cluster. A real deployment would inject this from a secret manager.
+  password: clinic-local-password
+  storage: 1Gi
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 512Mi }
+
+ingress:
+  enabled: true
+  className: traefik
+  # *.localhost resolves to 127.0.0.1 in browsers and curl, so no hosts file edit is needed.
+  host: clinicflow.localhost

@@ -1,0 +1,9 @@
+ClinicFlow {{ .Values.image.tag | trunc 7 }} is deployed to namespace {{ .Release.Namespace }}.
+
+Watch the pods start:
+  kubectl get pods -n {{ .Release.Namespace }}
+{{- if .Values.ingress.enabled }}
+
+Open the app:
+  http://{{ .Values.ingress.host }}
+{{- end }}
