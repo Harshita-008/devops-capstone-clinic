@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-# Compose runs migrations on startup. Kubernetes sets RUN_MIGRATIONS=false and runs them once
-# in a separate Job, so several replicas never migrate the same database at the same time.
+# Compose migrates on startup. Kubernetes runs migrations in an init container instead and
+# sets RUN_MIGRATIONS=false here, so the API container only serves traffic.
 if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
     alembic upgrade head
 fi
