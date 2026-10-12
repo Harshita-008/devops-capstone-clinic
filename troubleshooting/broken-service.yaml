@@ -1,0 +1,16 @@
+# Scenario 2: the Service selector has a typo, so it matches no pods and has no endpoints.
+# kubectl apply -f troubleshooting/broken-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: clinicflow-frontend-debug
+  namespace: clinicflow
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/instance: clinicflow
+    app.kubernetes.io/component: frontnd
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

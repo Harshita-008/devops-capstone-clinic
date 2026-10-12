@@ -1,0 +1,27 @@
+# Scenario 1: the image tag does not exist, so the pod can never start.
+# kubectl apply -f troubleshooting/broken-image.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clinicflow-broken-image
+  namespace: clinicflow
+  labels:
+    app.kubernetes.io/name: clinicflow-broken-image
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: clinicflow-broken-image
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: clinicflow-broken-image
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/harshita-008/clinicflow-frontend:does-not-exist
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BACKEND_URL
+              value: http://clinicflow-backend:8000
