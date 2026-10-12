@@ -1,0 +1,5 @@
+# CPU and memory metrics for kubectl top and the Horizontal Pod Autoscaler.
+# helm install metrics-server metrics-server/metrics-server --version 3.14.0 -n kube-system -f k8s/addons/metrics-server-values.yaml
+args:
+  # kind kubelets use self-signed certificates; acceptable on a local cluster only.
+  - --kubelet-insecure-tls
