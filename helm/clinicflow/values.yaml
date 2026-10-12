@@ -1,7 +1,7 @@
 # Images are built and pushed by the CI pipeline. Both share one tag: the Git commit SHA.
 image:
   registry: ghcr.io/harshita-008
-  tag: "eac98ea6a2423d46f075081eb71d9181c2edfcf7"
+  tag: "30e1e39783cb0a3971542fee64827ab06062b2b5"
   pullPolicy: IfNotPresent
 
 backend:
