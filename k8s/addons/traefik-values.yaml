@@ -16,3 +16,12 @@ ingressClass:
   enabled: true
   isDefaultClass: true
   name: traefik
+
+# A NodePort Service has no load balancer IP to publish, which would leave every Ingress without an
+# address (and Argo CD reporting it as Progressing). On kind the entry point is the laptop itself.
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: false
+    ingressEndpoint:
+      ip: 127.0.0.1
