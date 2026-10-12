@@ -42,3 +42,10 @@ def test_metrics_exposes_http_and_clinic_metrics(client, book):
 
     assert "http_requests_total" in metrics
     assert "clinic_appointments_booked_total" in metrics
+
+
+def test_status_change_series_exist_before_any_change(client):
+    metrics = client.get("/metrics").text
+
+    for status in ("SCHEDULED", "CHECKED_IN", "COMPLETED", "CANCELLED"):
+        assert f'clinic_appointment_status_changes_total{{status="{status}"}}' in metrics
