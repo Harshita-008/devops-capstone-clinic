@@ -11,7 +11,7 @@ export default function TopBar({ pages, current, onNavigate }) {
           </span>
           <span className="brand-text">
             <strong>ClinicFlow</strong>
-            <small>Pet clinic</small>
+            <small>Pet clinic · Mumbai</small>
           </span>
         </a>
 
