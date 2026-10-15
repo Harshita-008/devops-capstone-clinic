@@ -16,6 +16,13 @@ This is my final DevOps capstone project. I built the application and then took 
 DevOps flow: tests, Docker, a CI/CD pipeline with security scanning, AWS infrastructure with
 Terraform, Kubernetes with Helm, autoscaling, monitoring and automatic deployment.
 
+## Presentation and live demo
+
+The presentation and the live demo video are in this Google Drive folder:
+[ClinicFlow presentation and live demo](https://drive.google.com/drive/folders/1YMiHf7TGPzpUZ3opIkdryDAYt7WRTIQ5?usp=sharing)
+
+The presentation is also in this repository as [ClinicFlow-Presentation.pdf](ClinicFlow-Presentation.pdf).
+
 ## Architecture
 
 ```text
