@@ -1,31 +1,29 @@
 :root {
-  --teal: #0f766e;
-  --teal-dark: #115e59;
-  --teal-soft: #ccfbf1;
-  --amber: #b45309;
-  --amber-soft: #fef3c7;
-  --blue: #1d4ed8;
-  --blue-soft: #dbeafe;
-  --violet: #6d28d9;
-  --violet-soft: #ede9fe;
-  --green: #15803d;
-  --green-soft: #dcfce7;
-  --red: #b91c1c;
-  --red-soft: #fee2e2;
-
-  --ink: #0f172a;
-  --muted: #64748b;
-  --line: #e2e8f0;
+  --sun: #ffc83d;
+  --sun-deep: #e8a400;
+  --sun-soft: #fff3c4;
+  --cream: #fffaf0;
+  --ink: #1f1a14;
+  --ink-soft: #3a3227;
+  --muted: #7a6e5d;
+  --line: #efe4cc;
   --surface: #ffffff;
-  --page: #f1f5f9;
-  --sidebar: #0b2b2a;
 
-  --radius: 12px;
-  --shadow: 0 1px 2px rgb(15 23 42 / 6%), 0 4px 16px rgb(15 23 42 / 6%);
+  --blue: #2f62d6;
+  --blue-soft: #e4ecff;
+  --orange: #c2560c;
+  --orange-soft: #ffe8d6;
+  --green: #2c8a54;
+  --green-soft: #dff2e6;
+  --red: #b42318;
+  --red-soft: #fde4e1;
 
-  font-family: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --radius: 18px;
+  --shadow: 0 1px 0 rgb(31 26 20 / 4%), 0 8px 24px rgb(120 90 20 / 7%);
+
+  font-family: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
   color: var(--ink);
-  background: var(--page);
+  background: var(--cream);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -39,7 +37,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--page);
+  background: var(--cream);
 }
 
 h1,
@@ -47,6 +45,12 @@ h2,
 h3,
 p {
   margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
 }
 
 button,
@@ -62,6 +66,6 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }

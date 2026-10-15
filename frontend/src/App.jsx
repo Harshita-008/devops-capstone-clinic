@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import Sidebar from './components/Sidebar'
 import ToastProvider from './components/ToastProvider'
+import TopBar from './components/TopBar'
 import { PAGES } from './pages/registry'
 
 // The current page is kept in the URL hash so refresh and the back button work.
@@ -23,12 +23,10 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="layout">
-        <Sidebar pages={PAGES} current={current} onNavigate={navigate} />
-        <main className="content">
-          <Page onNavigate={navigate} />
-        </main>
-      </div>
+      <TopBar pages={PAGES} current={current} onNavigate={navigate} />
+      <main className="content">
+        <Page onNavigate={navigate} />
+      </main>
     </ToastProvider>
   )
 }

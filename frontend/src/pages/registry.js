@@ -1,11 +1,11 @@
 import AppointmentsPage from './AppointmentsPage'
 import DashboardPage from './DashboardPage'
-import DoctorsPage from './DoctorsPage'
-import PatientsPage from './PatientsPage'
+import PetsPage from './PetsPage'
+import VetsPage from './VetsPage'
 
 export const PAGES = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', component: DashboardPage },
-  { id: 'appointments', label: 'Appointments', icon: 'calendar', component: AppointmentsPage },
-  { id: 'patients', label: 'Patients', icon: 'users', component: PatientsPage },
-  { id: 'doctors', label: 'Doctors', icon: 'doctor', component: DoctorsPage },
+  { id: 'today', label: 'Today', icon: 'sun', component: DashboardPage },
+  { id: 'visits', label: 'Visits', icon: 'calendar', component: AppointmentsPage },
+  { id: 'pets', label: 'Pets', icon: 'paw', component: PetsPage },
+  { id: 'vets', label: 'Vets', icon: 'stethoscope', component: VetsPage },
 ]

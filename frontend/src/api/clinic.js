@@ -1,5 +1,6 @@
 import { request } from './client'
 
+// The API calls the pets "patients" and the vets "doctors"; the UI uses the pet clinic names.
 export const patientsApi = {
   list: (search) => request('/patients', { params: { search } }),
   create: (patient) => request('/patients', { method: 'POST', body: patient }),
@@ -10,6 +11,7 @@ export const doctorsApi = {
   list: (activeOnly = false) => request('/doctors', { params: { active_only: activeOnly || undefined } }),
   create: (doctor) => request('/doctors', { method: 'POST', body: doctor }),
   update: (id, changes) => request(`/doctors/${id}`, { method: 'PUT', body: changes }),
+  remove: (id) => request(`/doctors/${id}`, { method: 'DELETE' }),
 }
 
 export const appointmentsApi = {

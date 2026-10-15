@@ -7,19 +7,22 @@ export default function StatusBreakdown({ stats }) {
   const total = counts.reduce((sum, item) => sum + item.count, 0)
 
   return (
-    <section className="card">
-      <h2>Appointments by status</h2>
-      <div className="breakdown-bar" role="img" aria-label="Share of appointments in each status">
+    <section className="panel">
+      <div className="panel-head">
+        <h2>All visits by status</h2>
+        <span className="count">{total}</span>
+      </div>
+      <div className="breakdown-bar" role="img" aria-label="Share of visits in each status">
         {total > 0 &&
           counts.map(({ status, count }) => (
             <span key={status} className={`segment status-${status.toLowerCase()}`} style={{ flexGrow: count }} />
           ))}
       </div>
-      <ul className="breakdown-legend">
+      <ul className="breakdown-list">
         {counts.map(({ status, count }) => (
           <li key={status}>
             <span className={`dot status-${status.toLowerCase()}`} />
-            {STATUS_LABELS[status]}
+            <span>{STATUS_LABELS[status]}</span>
             <strong>{count}</strong>
           </li>
         ))}

@@ -5,9 +5,9 @@ import { useApi } from '../hooks/useApi'
 import { todayIso } from '../utils/format'
 
 export default function AppointmentForm({ onSaved, onCancel }) {
-  const patients = useApi(() => patientsApi.list(), 'patients')
-  const doctors = useApi(() => doctorsApi.list(true), 'active-doctors')
-  const { run, pending } = useAction(appointmentsApi.create, { successText: 'Appointment booked', onSuccess: onSaved })
+  const pets = useApi(() => patientsApi.list(), 'pets')
+  const vets = useApi(() => doctorsApi.list(true), 'active-vets')
+  const { run, pending } = useAction(appointmentsApi.create, { successText: 'Visit booked', onSuccess: onSaved })
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -23,30 +23,32 @@ export default function AppointmentForm({ onSaved, onCancel }) {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <Field label="Patient">
-        <select name="patient_id" required defaultValue="">
-          <option value="" disabled>
-            {patients.data?.length === 0 ? 'Register a patient first' : 'Select patient'}
-          </option>
-          {patients.data?.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.full_name} ({p.phone})
+      <div className="form-row">
+        <Field label="Pet">
+          <select name="patient_id" required defaultValue="">
+            <option value="" disabled>
+              {pets.data?.length === 0 ? 'Register a pet first' : 'Choose a pet'}
             </option>
-          ))}
-        </select>
-      </Field>
-      <Field label="Doctor">
-        <select name="doctor_id" required defaultValue="">
-          <option value="" disabled>
-            Select doctor
-          </option>
-          {doctors.data?.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.full_name} - {d.specialization}
+            {pets.data?.map((pet) => (
+              <option key={pet.id} value={pet.id}>
+                {pet.full_name} ({pet.phone})
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Vet">
+          <select name="doctor_id" required defaultValue="">
+            <option value="" disabled>
+              Choose a vet
             </option>
-          ))}
-        </select>
-      </Field>
+            {vets.data?.map((vet) => (
+              <option key={vet.id} value={vet.id}>
+                {vet.full_name}, {vet.specialization}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
       <div className="form-row">
         <Field label="Date">
           <input name="date" type="date" required min={todayIso()} defaultValue={todayIso()} />
@@ -56,12 +58,12 @@ export default function AppointmentForm({ onSaved, onCancel }) {
         </Field>
       </div>
       <Field label="Reason for visit">
-        <input name="reason" required minLength={2} maxLength={200} />
+        <input name="reason" required minLength={2} maxLength={200} placeholder="Vaccination, limping, check-up" />
       </Field>
       <Field label="Notes (optional)">
         <textarea name="notes" rows={2} />
       </Field>
-      <FormActions onCancel={onCancel} pending={pending} submitLabel="Book appointment" />
+      <FormActions onCancel={onCancel} pending={pending} submitLabel="Book visit" />
     </form>
   )
 }

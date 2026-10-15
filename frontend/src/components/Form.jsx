@@ -10,7 +10,7 @@ export function Field({ label, children }) {
 export function FormActions({ onCancel, pending, submitLabel }) {
   return (
     <div className="form-actions">
-      <button type="button" className="btn btn-secondary" onClick={onCancel}>
+      <button type="button" className="btn btn-light" onClick={onCancel}>
         Cancel
       </button>
       <button type="submit" className="btn btn-primary" disabled={pending}>
