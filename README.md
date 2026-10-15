@@ -1,16 +1,17 @@
-# ClinicFlow: Clinic Appointment Management
+# ClinicFlow: Pet Clinic Appointment Management
 
 [![CI/CD](https://github.com/Harshita-008/devops-capstone-clinic/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Harshita-008/devops-capstone-clinic/actions/workflows/ci-cd.yml)
 
-ClinicFlow is a small system for the front desk of a clinic. Staff can register patients, manage
-doctors, book appointments and update each visit as it goes through the day (scheduled, checked in,
-completed or cancelled).
+ClinicFlow is a small system for the front desk of a pet clinic. Staff can register pets with their
+owner's contact, manage the vets, book visits and update each visit as it goes through the day
+(scheduled, checked in, completed or cancelled). The Today page shows the day's line-up, the waiting
+room and how many vets are taking bookings.
 
 The API also enforces a few clinic rules:
 
-- a doctor cannot have two appointments within the same 30 minute slot
-- an appointment cannot be booked in the past or with a doctor who is not taking bookings
-- a patient or doctor with appointment history cannot be deleted, because that history is a medical record
+- a vet cannot have two visits within the same 30 minute slot
+- a visit cannot be booked in the past or with a vet who is away
+- a pet or vet with visit history cannot be deleted, because that history is the pet's medical record
 
 This is my final DevOps capstone project. I built the application and then took it through the full
 DevOps flow: tests, Docker, a CI/CD pipeline with security scanning, AWS infrastructure with
@@ -91,6 +92,9 @@ There are 19 REST endpoints. The Swagger page is at `/docs`.
 | Dashboard | `GET /api/dashboard/stats` |
 | System | `/` (service info), `/health` (liveness), `/ready` (checks the database) |
 
+The API keeps general names: pets are stored as `patients` and vets as `doctors`. The frontend shows
+them with the pet clinic names.
+
 The backend also serves `/metrics` for Prometheus.
 
 ## Run locally with Docker Compose
@@ -107,7 +111,7 @@ All three services should show `(healthy)`. Then open:
 - http://localhost:8000/metrics for the metrics
 
 The backend runs the Alembic migrations when it starts, so the tables and four sample doctors are
-created automatically.
+created automatically. They can be removed or switched to away on the Vets page.
 
 ## Tests
 
@@ -200,8 +204,9 @@ The Helm chart `helm/clinicflow` contains:
 - a ServiceMonitor and the Grafana dashboard (only added when Prometheus is installed)
 
 All pods have liveness and readiness probes. The backend and frontend containers also run as
-non-root users and drop all Linux capabilities. Database migrations run in an init container before the backend starts. Alembic takes
-a PostgreSQL lock first, so two pods starting together never migrate the database at the same time.
+non-root users and drop all Linux capabilities. Database migrations run in an init container before
+the backend starts. Alembic takes a PostgreSQL lock first, so two pods starting together never
+migrate the database at the same time.
 
 ## Deployment with Argo CD
 
@@ -272,16 +277,16 @@ to find and fix them:
 
 ### Application
 
-Dashboard running with Docker Compose:
+Today page running with Docker Compose:
 
-![Dashboard on localhost:3000](screenshots/img_3.png)
+![Today page on localhost:3000](screenshots/img_3.png)
 
 API docs, with a live request and the full list of endpoints:
 
 ![Swagger request](screenshots/img_4a.png)
 ![Swagger endpoints](screenshots/img_4b.png)
 
-PostgreSQL tables created by Alembic, with saved appointments:
+PostgreSQL tables created by Alembic, with the saved visits in the `appointments` table:
 
 ![PostgreSQL tables](screenshots/img_5.png)
 
@@ -347,16 +352,17 @@ Health check, readiness check and metrics:
 
 ### Commit to deployment
 
-Argo CD in sync with Git:
+Argo CD in sync with Git, running the new pods for the deploy commit:
 
 ![Argo CD](screenshots/img_27.png)
 
-I changed the text under the logo and pushed. The pipeline tested, built, scanned and pushed the
-images:
+I changed the text under the logo from "Pet clinic" to "Pet clinic · Mumbai" and pushed. The
+pipeline tested, built, scanned and pushed the images:
 
 ![Pipeline run for the change](screenshots/img_28.png)
 
-I then set the new tag in `values.yaml` and pushed, and Argo CD deployed it:
+I then set the new tag in `values.yaml` and pushed, and Argo CD deployed it on its own. The history
+shows this deploy above the previous one:
 
 ![Argo CD history](screenshots/img_29.png)
 
